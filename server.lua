@@ -1,7 +1,11 @@
-AddEventHandler('onResourceStart', function(resourcename)
-    if resourcename == GetCurrentResourceName() then
-        wait(5000)
-        MySQL.update('UPDATE player_vehicles SET state = 0 WHERE state = 1',{})
-        print('[op-garages] Vehicle States reset on startup.')
-    end
+CreateThread(function()
+    Wait(5000) -- Give database resource time to initialize
+
+    exports.oxmysql:update(
+        'UPDATE player_vehicles SET state = 0 WHERE state = 1',
+        {},
+        function(affectedRows)
+            print(('[Ash-vehicle-reset] Reset %s vehicle states.'):format(affectedRows))
+        end
+    )
 end)
